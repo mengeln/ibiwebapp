@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head><title>IBI Calculator</title>
+<link rel="stylesheet" type="text/css" href="../css/ibiscore.css" />
+
+<script type="text/javascript" src="http://www.google.com/jsapi?key="></script>
+<script type="text/javascript">
+  
+  google.load("maps","2", {"other_params":"sensor=false"});
+  function init() {
+    map = new google.maps.Map2(document.getElementById("map"));
+    var myLatLng = new google.maps.LatLng(34, -118);
+    map.setCenter(myLatLng,9);
+    map.addControl(new google.maps.LargeMapControl());
+    map.addControl(new google.maps.MapTypeControl());
+    map.setMapType(G_SATELLITE_MAP);
+  };
+  google.setOnLoadCallback(init);
+</script>
+
+</head>
+<body onunload="google.maps.Unload()">
+<h2>Calculating Index of Biotic Integrity Scores for California Streams</h2>
+
+<div id="leftcol">
+<p>This calculator can take taxonomic abundance data, along with locality data, and
+produce metrics and scores used for calculating the index of biotic integrity. Please
+upload files that have the following attributes: 1) Are in .csv format. 2) The "data" file
+has at least columns StationCode, SampleID, FinalID, and BAResult. DistinctiveCode, SampleDate are
+optional. 3) The "location" file has columns StationCode, Latitude, and Longitude.
+<HR>
+<BR>
+Data:<BR>
+<form method="POST" enctype="multipart/form-data">
+<input type="file" name="data">
+<BR>
+Location:<BR>
+<form method="POST" enctype="multipart/form-data">
+<input type="file" name="location">
+<input type="submit">
+<% if (!is.null(req$POST())) {
+  
+  data <- req$POST()[["data"]]
+  data <- read.csv(data$tempfile)
+  location <- req$POST()[["location"]]
+  location <- read.csv(location$tempfile)
+  
+  source("../r/IBIlocation.r")
+  source("../r/IBImap.r")
+  source("../r/IBIname_match.r")
+  source("../r/SoCal_IBI.r")
+  
+  results <- SoCal_IBI(location, data)
+  }
+  %>
+<div id="map" style="width: 800px; height: 800px; margin: right; background-color: red">
+</div>
+
+<BR>
+<BR>
+<BR>
+</body></html>
