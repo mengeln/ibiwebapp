@@ -15,7 +15,6 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   sample_count_flag[(which(total_count < 450))] <- "Inadequate"
   ###Subsample down to 500###
   datalength <- length(data)
-  print("Starting 20 iterations of rarification")
   rarifydown <- function(data){unlist(sapply(unique(data$SampleID), function(sample){
     v <- data[data$SampleID==sample, "Result"]
     
@@ -32,7 +31,6 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   rarificationresult <- foreach(i=1:20, .combine=cbind, .packages="vegan") %dopar% {
     rarifydown(data)
   }
-  print("Rarification complete")
   data <- cbind(data, rarificationresult)
   colnames(data)[(datalength + 1):(datalength + 20)]<- paste("Replicate", 1:20)
   ###Metrics set up###
@@ -320,7 +318,6 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   map2 <<- IBImap(locationinfo, data, scibi, type="SCIBI", zone="SoCal")
   #dev.off()
   ###Return results###
-  print(proc.time() - starttime)
   return(results)
 }
 

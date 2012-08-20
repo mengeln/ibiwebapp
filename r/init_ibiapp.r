@@ -14,7 +14,7 @@ s$add( name="ibiscore",
            imagepath=file.path(tempdir(),"plots"),
            imageurl="../plots/"
          ),
-         Redirect$new("/brew/ibiscore.rhtml")
+         Redirect$new("/brew/ibiscore_gmap.rhtml")
        )
 )
 s$start(quiet=TRUE)
