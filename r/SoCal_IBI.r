@@ -102,7 +102,7 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   missing <- which(is.na(stationlocation[[2]]))
   ###Print map###
   #pdf(file = "Ecoregion_map_SoCal.pdf")
-  map1 <<- IBImap(locationinfo, data, Ecoregion, type="Ecoregion", zone = "SoCal")
+#   map1 <<- IBImap(locationinfo, data, Ecoregion, type="Ecoregion", zone = "SoCal")
   #dev.off()
   ###Convert metrics to scores###
   scores <- metrics
@@ -308,15 +308,18 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   if(extrastuff>0){
     results <- results[, c(1:5, 22:(21+extrastuff), 6:21)]  
   }
-  ###Print SCIBI map###
-  scibi <- results$SCIBI
-  names(scibi) <- results$StationCode 
-  scibi <- scibi[match(names(Ecoregion), names(scibi))] 
-  names(scibi) <- names(Ecoregion)
-  scibi <- unlist(scibi)
-  #pdf(file="SCIBI_map_SoCal.pdf")
-  map2 <<- IBImap(locationinfo, data, scibi, type="SCIBI", zone="SoCal")
+#   ###Print SCIBI map###
+#   scibi <- results$SCIBI
+#   names(scibi) <- results$StationCode 
+#   scibi <- scibi[match(names(Ecoregion), names(scibi))] 
+#   names(scibi) <- names(Ecoregion)
+#   scibi <- unlist(scibi)
+#   #pdf(file="SCIBI_map_SoCal.pdf")
+#   map2 <<- IBImap(locationinfo, data, scibi, type="SCIBI", zone="SoCal")
   #dev.off()
+  ###Merge###
+  results$Longitude <- locationinfo$Longitude[match(results$StationCode, locationinfo$StationCode)]
+  results$Latitude <- locationinfo$Latitude[match(results$StationCode, locationinfo$StationCode)]
   ###Return results###
   return(results)
 }

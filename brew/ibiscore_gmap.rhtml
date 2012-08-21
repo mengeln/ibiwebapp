@@ -52,8 +52,29 @@ Location:<BR>
   source("../r/SoCal_IBI.r")
   
   results <- SoCal_IBI(location, data)
-  }
-  %>
+  results <<- results
+  
+  sink(file="../XML/test.xml")
+  cat('<?xml version="1.0"?>', "\n")
+  cat('<doc>', "\n")
+  cat(' <markers>', "\n")
+  for(i in 1:nrow(results)){
+   cat(paste("  <marker stationid=", '"', results$StationCode[i], '"', " sampleid=",
+            '"', results$SampleID[i], '"', " latitude=", '"', 
+            results$Latitude[i], '"', " longitude=", '"', results$Longitude[i], '"', " SCIBI=", '"', 
+            results$SCIBI[i], '"'," coleoptera_taxa=", '"', results$"Number of Coleoptera Taxa"[i], '"',
+            " ept_taxa=", '"', results$"Number of EPT Taxa"[i], '"', " predator_taxa=",
+            '"', results$"Number of Predator Taxa"[i], '"', " percent_non_insect=", '"',
+            results$"Percent Non-Insect Taxa"[i], '"', " percent_tolerant_taxa=", '"',
+            results$"Percent Tolerant Taxa"[i], '"', " percent_intolerant_ind=",  '"',
+            results$"Percent Intolerant"[i], '"', " cf_cg=", '"', 
+            results$"Percent CF + CG Individuals"[i], '"',  '/>', sep=""), "\n")
+      }
+  cat(' </markers>', "\n")
+  cat('</doc>')
+  sink()
+}
+%>
 <div id="map" style="width: 800px; height: 800px; margin: right; background-color: red">
 </div>
 
