@@ -1,6 +1,18 @@
+###Read in command line arguments###
+args <- commandArgs(TRUE)
+csv_output <- paste("/var/www/upload/files", args[4], sep = "/")
+xml_output <- paste("/var/www/upload/files", args[3], sep = "/")
+location_input <- paste("/var/www/upload/files", args[2], sep = "/")
+data_input <- paste("/var/www/upload/files", args[1], sep = "/")
+
+###IBI Calculator
 SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, FieldReplicate=F){
+  ###pull in other scripts###
+  source("IBIlocation.r")
+  source("IBImap.r")
+  source("IBIname_match.r")
   options(warn = -1)
-  load(system.file("data", "ibi.RData", package ="ibiscore"))
+  load("../Data/ibi.RData")
   starttime <- proc.time()
   data <- IBIname_match(data=data, DistinctCode=DistinctCode)
   colnames(data)[which(colnames(data) == "FinalID")] <- "Taxa"
@@ -317,12 +329,43 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
 #   #pdf(file="SCIBI_map_SoCal.pdf")
 #   map2 <<- IBImap(locationinfo, data, scibi, type="SCIBI", zone="SoCal")
   #dev.off()
-  ###Merge###
+  ###Merge Lat/Long###
   results$Longitude <- locationinfo$Longitude[match(results$StationCode, locationinfo$StationCode)]
   results$Latitude <- locationinfo$Latitude[match(results$StationCode, locationinfo$StationCode)]
   ###Return results###
   return(results)
 }
 
+###Compute IBI score###
+loc <- read.csv(location_input)
+dat <- read.csv(data_input)
+results <- SoCal_IBI(loc, dat)
 
+###Write results to csv###
+write.csv(results, file=csv_output)
 
+###XML writer###
+writeXML <- function(results, output_file){
+  sink(file=output_file)
+  cat('<?xml version="1.0"?>', "\n")
+  cat('<doc>', "\n")
+  cat(' <markers>', "\n")
+  for(i in 1:nrow(results)){
+    cat(paste("  <marker stationid=", '"', results$StationCode[i], '"', " sampleid=",
+              '"', results$SampleID[i], '"', " latitude=", '"', 
+              results$Latitude[i], '"', " longitude=", '"', results$Longitude[i], '"', " SCIBI=", '"', 
+              results$SCIBI[i], '"'," coleoptera_taxa=", '"', results$"Number of Coleoptera Taxa"[i], '"',
+              " ept_taxa=", '"', results$"Number of EPT Taxa"[i], '"', " predator_taxa=",
+              '"', results$"Number of Predator Taxa"[i], '"', " percent_non_insect=", '"',
+              results$"Percent Non-Insect Taxa"[i], '"', " percent_tolerant_taxa=", '"',
+              results$"Percent Tolerant Taxa"[i], '"', " percent_intolerant_ind=",  '"',
+              results$"Percent Intolerant"[i], '"', " cf_cg=", '"', 
+              results$"Percent CF + CG Individuals"[i], '"',  '/>', sep=""), "\n")
+  }
+  cat(' </markers>', "\n")
+  cat('</doc>')
+  sink()
+}
+
+###Write results to XML###
+writeXML(results, xml_output)

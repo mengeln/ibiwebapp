@@ -1,5 +1,5 @@
 IBIlocation <- function(points){ ###"points must be a data frame with columns StationCode, Latitude, and Longitude
-  load(system.file("data", "california.RData", package ="ibiscore"))
+  load("../Data/california.RData")
   require("rgdal")
   coordinates(points) <- ~Longitude + Latitude
   points@proj4string <- california@proj4string

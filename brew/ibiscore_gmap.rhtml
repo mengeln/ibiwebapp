@@ -17,6 +17,16 @@
     map.setMapType(G_SATELLITE_MAP);
   };
   google.setOnLoadCallback(init);
+  
+  $(document).ready(function(url)
+  {
+    $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "xml",
+      success: parseXml
+    });
+  });
 </script>
 
 </head>
