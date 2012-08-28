@@ -1,0 +1,11 @@
+StationCode,SampleID,FinalID,BAResult,DistinctCode
+Station1,SampleA_2012Dec31,Apedilum,1,
+Station1,SampleA_2012Dec31,Argia,2,
+Station1,SampleA_2012Dec31,Ceratopogonidae,2,Yes
+Station1,SampleA_2012Dec31,Chironomus,6,
+Station1,SampleA_2012Dec31,Cladotanytarsus,2,
+Station2,SampleB_2013Jan01,Argia,4,
+Station2,SampleB_2013Jan01,Baetis,20,Yes
+Station2,SampleB_2013Jan01,Corbicula,17,
+Station2,SampleB_2013Jan01,Cricotopus,115,
+Station2,SampleB_2013Jan01,Cricotopus bicinctus group,24,
