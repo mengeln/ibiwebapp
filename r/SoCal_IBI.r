@@ -288,7 +288,7 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   results[[4]] <- total_count[!is.na(total_count)]
   results[[5]] <- sample_count_flag[!is.na(sample_count_flag)]
   results[[6]] <- rep(20, times=length(unique(data$SampleID)))
-  results[[6]][which(results$"Total Count" <500)] <- 1
+  results[[6]][which(results[[4]] < 500)] <- 1
   results[, 7:21] <- means
   colnames(results) <- c("StationCode", "SampleID", "Ecoregion", "Total Count", "Count Flag", "Number of Iteration", 
                          "Number of Coleoptera Taxa", "Number of EPT Taxa", "Number of Predator Taxa", 
