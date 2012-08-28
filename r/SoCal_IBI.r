@@ -290,12 +290,14 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   results[[6]] <- rep(20, times=length(unique(data$SampleID)))
   results[[6]][which(results[[4]] < 500)] <- 1
   results[, 7:21] <- means
+  results[[21]] <- round(results[[21]], digits=2)
   colnames(results) <- c("StationCode", "SampleID", "Ecoregion", "Total Count", "Count Flag", "Number of Iteration", 
                          "Number of Coleoptera Taxa", "Number of EPT Taxa", "Number of Predator Taxa", 
                          "Percent Non-Insect Taxa", "Percent Tolerant Taxa", "Percent Intolerant", 
                          "Percent CF + CG Individuals", "Coleoptera Score", "EPT Score", "Predator Taxa Score",
                          "Non-Insect Taxa Score", "Tolerant Taxa Score", "Intolerant Score",
                          "CF + CG Score", "SCIBI")
+  
   ###Representativeness flag###
   if(Grid==T){
     data$Representativeness_Flag <- rep(NA, length(data$StationCode))
