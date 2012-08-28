@@ -9,7 +9,7 @@ data_input <- paste("/var/www/upload/files", args[1], sep = "/")
 SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, FieldReplicate=F){
   ###pull in other scripts###
   source("IBIlocation.r")
-  source("IBImap.r")
+  #source("IBImap.r")
   source("IBIname_match.r")
   options(warn = -1)
   load("../Data/ibi.RData")
@@ -288,6 +288,7 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
   results[[4]] <- total_count[!is.na(total_count)]
   results[[5]] <- sample_count_flag[!is.na(sample_count_flag)]
   results[[6]] <- rep(20, times=length(unique(data$SampleID)))
+  results[[6]][which(results$"Total Count" <500)] <- 1
   results[, 7:21] <- means
   colnames(results) <- c("StationCode", "SampleID", "Ecoregion", "Total Count", "Count Flag", "Number of Iteration", 
                          "Number of Coleoptera Taxa", "Number of EPT Taxa", "Number of Predator Taxa", 
@@ -339,7 +340,7 @@ SoCal_IBI <- function(locationinfo, data, DistinctCode=F, Grid=F, SampleDate=F, 
 ###Compute IBI score###
 loc <- read.csv(location_input)
 dat <- read.csv(data_input)
-results <- SoCal_IBI(loc, dat)
+results <- SoCal_IBI(loc, dat, DistinctCode=T)
 
 ###Write results to csv###
 write.csv(results, file=csv_output)
